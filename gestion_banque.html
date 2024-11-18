@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Banque</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <button ><a  href="./index.html">Home</a></button>
+        <button ><a  href="./gestion_tva.html">Gestion de TVA</a></button>
+
+        <button ><a  href="./gestion_factures.html">Gestion des Factures</a></button>
+
+
+        <h1>Gestion de Banque</h1>
+        <input type="text" id="search" placeholder="Rechercher relevé bancaire...">
+        <select id="month-filter">
+            <option value="">Tous les mois</option>
+            <option value="01">Janvier</option>
+            <option value="02">Février</option>
+            <option value="03">Mars</option>
+            <option value="04">Avril</option>
+            <option value="05">Mai</option>
+            <option value="06">Juin</option>
+            <option value="07">Juillet</option>
+            <option value="08">Août</option>
+            <option value="09">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select>
+        <select id="year-filter">
+            <option value="">Toutes les années</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+    </header>
+    <main id="factures-container"></main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modal-image" src="" alt="Facture">
+            <p id="modal-details"></p>
+            <button onclick="imprimerImage()">Imprimer l'image</button>
+        </div>
+    </div>
+    
+
+    <script src="script.js" defer></script>
+</body>
+</html>

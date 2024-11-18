@@ -1,4 +1,4 @@
-// Variables globales pour recherche, mois et années
+// Variables globales pour recherche et filtres
 let currentSearchTerm = '';
 let currentMonthFilter = '';
 let currentYearFilter = '';
@@ -9,7 +9,7 @@ fetch('data.json')
     .then(data => {
         displayFactures(data);
 
-        // Événements pour recherche, mois et année
+        // Ajout des événements pour recherche, mois et année
         document.getElementById('search').addEventListener('input', (e) => {
             currentSearchTerm = e.target.value.toLowerCase();
             filterFactures(data);
@@ -24,7 +24,8 @@ fetch('data.json')
             currentYearFilter = e.target.value;
             filterFactures(data);
         });
-    });
+    })
+    .catch(error => console.error('Erreur lors du chargement des factures :', error));
 
 // Fonction pour afficher les factures
 function displayFactures(factures) {
@@ -36,9 +37,16 @@ function displayFactures(factures) {
         factureElement.className = 'facture';
 
         factureElement.innerHTML = `
-            <img src="${facture.image}" alt="Facture ${facture.name}">
+            <img src="${facture.image}" alt="Facture ${facture.name}" 
+                 data-name="${facture.name}" data-date="${facture.date}" data-image="${facture.image}">
             <p>${facture.name} - ${facture.date}</p>
         `;
+
+        // Ajouter un événement de clic sur l'image pour afficher le modal
+        factureElement.querySelector('img').addEventListener('click', (e) => {
+            showModal(e.target.dataset);
+        });
+
         container.appendChild(factureElement);
     });
 }
@@ -54,3 +62,64 @@ function filterFactures(factures) {
 
     displayFactures(filtered);
 }
+
+// Gestion du modal
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modal-image');
+const modalDetails = document.getElementById('modal-details');
+const closeModalButton = document.querySelector('.close');
+
+// Fonction pour afficher le modal
+function showModal(data) {
+    modalImage.src = data.image;
+    modalDetails.textContent = `Nom : ${data.name} | Date : ${data.date}`;
+    modal.classList.add('show');
+}
+
+// Fonction pour fermer le modal
+function closeModal() {
+    modal.classList.remove('show');
+}
+
+// Fonction pour imprimer l'image affichée dans le modal
+function imprimerImage() {
+    const printWindow = window.open('', '', 'width=800,height=800');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Imprimer l'Image</title>
+            <style>
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #f4f4f4;
+                }
+                img {
+                    width: 90%;
+                    height: auto;
+                    border: 2px solid #333;
+                    border-radius: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <img src="${modalImage.src}" alt="Facture à imprimer" />
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Événement pour fermer le modal en cliquant sur le bouton de fermeture
+closeModalButton.addEventListener('click', closeModal);
+
+// Événement pour fermer le modal en cliquant en dehors de son contenu
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeModal();
+    }
+});
