@@ -5,7 +5,12 @@ let currentYearFilter = '';
 
 // Chargement des factures depuis le fichier JSON
 fetch('data.json')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau lors du chargement des données.');
+        }
+        return response.json();
+    })
     .then(data => {
         displayFactures(data);
 
@@ -67,59 +72,77 @@ function filterFactures(factures) {
 const modal = document.getElementById('modal');
 const modalImage = document.getElementById('modal-image');
 const modalDetails = document.getElementById('modal-details');
-const closeModalButton = document.querySelector('.close');
 
 // Fonction pour afficher le modal
 function showModal(data) {
-    modalImage.src = data.image;
-    modalDetails.textContent = `Nom : ${data.name} | Date : ${data.date}`;
-    modal.classList.add('show');
+    if (modalImage && modalDetails && modal) {
+        modalImage.src = data.image;
+        modalDetails.textContent = `Nom : ${data.name} | Date : ${data.date}`;
+        modal.classList.add('show');
+    } else {
+        console.error('Impossible d\'afficher le modal, les éléments nécessaires ne sont pas chargés.');
+    }
 }
 
 // Fonction pour fermer le modal
 function closeModal() {
-    modal.classList.remove('show');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 // Fonction pour imprimer l'image affichée dans le modal
 function imprimerImage() {
-    const printWindow = window.open('', '', 'width=800,height=800');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>Imprimer l'Image</title>
-            <style>
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                    background-color: #f4f4f4;
-                }
-                img {
-                    width: 90%;
-                    height: auto;
-                    border: 2px solid #333;
-                    border-radius: 10px;
-                }
-            </style>
-        </head>
-        <body>
-            <img src="${modalImage.src}" alt="Facture à imprimer" />
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
+    if (modalImage && modalImage.src) {
+        const printWindow = window.open('', '', 'width=800,height=800');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Imprimer l'Image</title>
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        margin: 0;
+                        background-color: #f4f4f4;
+                    }
+                    img {
+                        width: 90%;
+                        height: auto;
+                        border: 2px solid #333;
+                        border-radius: 10px;
+                    }
+                </style>
+            </head>
+            <body>
+                <img src="${modalImage.src}" alt="Facture à imprimer" />
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    } else {
+        console.error('Aucune image à imprimer.');
+    }
 }
 
-// Événement pour fermer le modal en cliquant sur le bouton de fermeture
-closeModalButton.addEventListener('click', closeModal);
+// Initialisation des événements
+document.addEventListener('DOMContentLoaded', () => {
+    const closeModalButton = document.querySelector('.close');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', closeModal);
+    } else {
+        console.error('Le bouton pour fermer le modal est introuvable.');
+    }
 
-// Événement pour fermer le modal en cliquant en dehors de son contenu
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        closeModal();
+    // Événement pour fermer le modal en cliquant en dehors de son contenu
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
     }
 });
