@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Factures</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f4f4f4, #e8e8e8);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background: #007bff;
+            color: white;
+            padding: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-container input,
+        .form-container button {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        .form-container input {
+            border: 1px solid #ccc;
+        }
+
+        .form-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #factures-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .facture {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 15px;
+            width: 200px;
+        }
+
+        .facture img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .facture p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        .facture button {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+        }
+
+        .facture button:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav>
+        <a href="index.html">Accueil</a>
+    </nav>
+
+    <h1>Gestion des Factures</h1>
+
+    <!-- Formulaire pour ajouter une facture -->
+    <div class="form-container">
+        <h2>Ajouter une Facture</h2>
+        <form id="add-facture-form" enctype="multipart/form-data">
+            <label for="name">Nom de la facture :</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="date">Date de la facture :</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="image">Image de la facture :</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+
+            <button type="submit">Ajouter</button>
+        </form>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters">
+        <input type="text" id="search" placeholder="Rechercher par nom de facture...">
+        <select id="month-filter">
+            <option value="">Tous les mois</option>
+            <option value="01">Janvier</option>
+            <option value="02">Février</option>
+            <option value="03">Mars</option>
+            <option value="04">Avril</option>
+            <option value="05">Mai</option>
+            <option value="06">Juin</option>
+            <option value="07">Juillet</option>
+            <option value="08">Août</option>
+            <option value="09">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select>
+        <select id="year-filter">
+            <option value="">Toutes les années</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+    </div>
+
+    <!-- Conteneur des factures -->
+    <main id="factures-container"></main>
+
+    <script src="script.js"></script>
+</body>
+</html>
